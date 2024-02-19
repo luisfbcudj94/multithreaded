@@ -190,8 +190,8 @@ Icon?
 # SASS Compiler cache
 .sass-cache
 
-task_1/obj/Debug/net8.0/task_1.AssemblyInfoInputs.cache
-task_1/obj/Debug/net8.0/task_1.AssemblyInfo.cs
+.AssemblyInfoInputs.cache
+.AssemblyInfo.cs
 
 # Visual Studio 2014 CTP
 **/*.sln.ide
