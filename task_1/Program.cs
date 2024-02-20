@@ -2,7 +2,7 @@
 
 // Generate paths
 string filePathsString = "";
-for (int i = 0; i < 100; i++)
+for (int i = 0; i < 8; i++)
 {
     filePathsString += $"./files/file{i}.txt,";
 }
@@ -10,7 +10,9 @@ for (int i = 0; i < 100; i++)
 string search = "*BGAA*";
 
 int maxFilesPerBucket  = Environment.ProcessorCount;
+// int maxFilesPerBucket  = 4;
 string[] filePaths = filePathsString.Split(',');
+filePaths = filePaths.Where(filePath => !string.IsNullOrEmpty(filePath)).ToArray();
 
 var buckets = BucketizeFilePaths(filePaths, maxFilesPerBucket);
 
@@ -52,8 +54,19 @@ static IEnumerable<IEnumerable<string>> BucketizeFilePaths(string[] filePaths, i
 {
     int numBuckets = (int)Math.Ceiling((double)filePaths.Length / maxFilesPerBucket);
 
+    int remainingFiles = filePaths.Length % maxFilesPerBucket;
+    bool lastBucket = false;
+
     for (int i = 0; i < numBuckets; i++)
     {
-        yield return filePaths.Skip(i * maxFilesPerBucket).Take(maxFilesPerBucket);
+        if (remainingFiles > 0 && i == numBuckets - 2)
+        {
+            lastBucket = true;
+            yield return filePaths.Skip(i * maxFilesPerBucket).Take(maxFilesPerBucket + remainingFiles);
+        }
+        else if (!lastBucket)
+        {
+            yield return filePaths.Skip(i * maxFilesPerBucket).Take(maxFilesPerBucket);
+        }
     }
 }
